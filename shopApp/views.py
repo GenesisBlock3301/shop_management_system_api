@@ -9,12 +9,9 @@ from django.contrib.auth import get_user_model # If used custom user model
 from rest_framework import authentication
 from rest_framework import exceptions
 from django.conf import settings
+from django.contrib.auth import authenticate, login
 
-class CustomerLogin(authentication.BaseAuthentication):
-    model = User
 
-    def authenticate(self, request):
-        pass
 
 class CustomerRegistrationView(CreateAPIView):
     model = get_user_model()
@@ -27,6 +24,22 @@ class EmployeeRegistrationView(CreateAPIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = EmployeeRegisterSerialiser
 
+class CustomerLoginView(APIView):
+    model = get_user_model()
+    def post(self,request,format=None):
+        data = request.data
+        # serializer = Cu
+        email = data.get('email',None)
+        passaword = data.get('password',None)
+        user = authenticate(email=email,passaword=passaword)
+        if user is not None:
+            if user.is_active:
+                login(request,user)
+                return Response(status=status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 class ProductViewSet(APIView):
 

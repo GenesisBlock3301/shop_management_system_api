@@ -42,6 +42,8 @@ class User(AbstractBaseUser,PermissionsMixin):
     address = models.CharField(max_length=150)
     phone = models.CharField(max_length=150)
     birthday = models.CharField(max_length=150)
+    password = models.CharField(max_length=50)
+    confirm_password = models.CharField(max_length=50)
 
 
     USERNAME_FIELD = 'email'

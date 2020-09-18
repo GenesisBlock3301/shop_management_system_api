@@ -25,7 +25,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
-    'shopApp'
+    'djoser',
+    'rest_framework.authtoken',
+    'shopApp',
 ]
 
 MIDDLEWARE = [
@@ -105,3 +107,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'shopApp.User'
+
+REST_FRAMEWORK ={
+    'DAFAULT_AUTHENTICATION_CLASSES':(
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
