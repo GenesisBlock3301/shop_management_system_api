@@ -1,16 +1,24 @@
-from rest_framework import status,permissions
+from rest_framework import status, permissions
 from rest_framework.response import Response
 from .serializers import *
 from rest_framework.views import APIView
 from .models import *
 from django.http import Http404
 from rest_framework.generics import CreateAPIView
-from django.contrib.auth import get_user_model # If used custom user model
-from rest_framework import authentication
-from rest_framework import exceptions
-from django.conf import settings
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import get_user_model  # If used custom user model
 
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import login as django_login, logout as django_logout
+
+
+class UserListView(APIView):
+    # authentication_classes = [authentication.TokenAuthentication]
+    # permission_classes = [permissions.IsAdminUser]
+    def get(self, request, format=None):
+        user = [user.email for user in User.objects.all()]
+
+        return Response(user, status=status.HTTP_200_OK)
 
 
 class CustomerRegistrationView(CreateAPIView):
@@ -24,22 +32,8 @@ class EmployeeRegistrationView(CreateAPIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = EmployeeRegisterSerialiser
 
-class CustomerLoginView(APIView):
-    model = get_user_model()
-    def post(self,request,format=None):
-        data = request.data
-        # serializer = Cu
-        email = data.get('email',None)
-        passaword = data.get('password',None)
-        user = authenticate(email=email,passaword=passaword)
-        if user is not None:
-            if user.is_active:
-                login(request,user)
-                return Response(status=status.HTTP_200_OK)
-            else:
-                return Response(status=status.HTTP_404_NOT_FOUND)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
 
 class ProductViewSet(APIView):
 
@@ -85,6 +79,7 @@ class CommentViewSet(APIView):
         comments = Comment.objects.all()
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
+
 
 class TransactionViewSet(APIView):
 
