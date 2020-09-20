@@ -37,19 +37,23 @@ class CustomerRegisterSerialiser(serializers.ModelSerializer):
             raise serializers.ValidationError("Password not match.")
         return data
 
-    def create_user(self, validate_data):
-        user = User.objects.create_user(
-            email=validate_data['email'],
-            full_name=validate_data['full_name'],
-            address=validate_data['address'],
-            phone=validate_data['phone'],
-            birthday=validate_data['birthday'],
+    # def create_user(self, validate_data):
+        # user = User.objects.create_user(
+        #     email=validate_data['email'],
+        #     full_name=validate_data['full_name'],
+        #     address=validate_data['address'],
+        #     phone=validate_data['phone'],
+        #     birthday=validate_data['birthday'],
+        #
+        # )
+        # user.set_password(validate_data['password'])
+        # user.is_customer = True
+        # user.save()
+        # return user
+    def create(self, validated_data):
+        """creates user with encrypted password and retruns the user"""
+        return get_user_model().objects.create_user(**validated_data)
 
-        )
-        user.set_password(validate_data['password'])
-        user.is_customer = True
-        user.save()
-        return user
 
     def update(self, instance, validated_data):
         instance.email = validated_data.get('email', None)
@@ -71,9 +75,9 @@ class CustomerRegisterSerialiser(serializers.ModelSerializer):
         model = User
         fields = (
             'id',
+            'email',
             'password',
             'confirm_password',
-            'email',
             'full_name',
             'address',
             'phone',
@@ -131,15 +135,72 @@ class EmployeeRegisterSerialiser(serializers.ModelSerializer):
         model = User
         fields = (
             'id',
+            'email',
             'password',
             'confirm_password',
-            'email',
             'full_name',
             'address',
             'phone',
             'birthday',
             'is_employee'
         )
+
+
+class LoginSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(required=True)
+    password = serializers.CharField(required=True)
+
+    def validate(self, data):
+        email = data.get("email", None)
+        password = data.get("password", None)
+
+        if email and password:
+            user = authenticate(email=email,password=password)
+            print("--------------------------------------------",user)
+            if user:
+                if user.is_active:
+                    data["user"] = user
+                else:
+                    msg = "User is deactivated."
+                    raise exceptions.ValidationError(msg)
+            else:
+                msg = "Unable to login with given credentials."
+                raise exceptions.ValidationError(msg)
+        else:
+            msg = "Must provide username and password both."
+            raise exceptions.ValidationError(msg)
+        return data
+    class Meta:
+        model = User
+        fields = (
+            'email',
+            'password',
+
+        )
+
+# class EmployeeLoginSerializer(serializers.Serializer):
+#     email = serializers.CharField(required=True)
+#     password = serializers.CharField(required=True)
+#
+#     def validate(self, data):
+#         email = data.get("email", "")
+#         password = data.get("password", "")
+#
+#         if email and password:
+#             user = authenticate(email=email, password=password)
+#             if user:
+#                 if user.is_active:
+#                     data["user"] = user
+#                 else:
+#                     msg = "User is deactivated."
+#                     raise exceptions.ValidationError(msg)
+#             else:
+#                 msg = "Unable to login with given credentials."
+#                 raise exceptions.ValidationError(msg)
+#         else:
+#             msg = "Must provide username and password both."
+#             raise exceptions.ValidationError(msg)
+#         return data
 
 
 
