@@ -9,7 +9,7 @@ from django.contrib.auth import get_user_model  # If used custom user model
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import login as django_login, logout as django_logout
-
+from django.utils.translation import gettext as _
 
 class UserListView(APIView):
     # authentication_classes = [authentication.TokenAuthentication]
@@ -54,7 +54,21 @@ class LoginView(APIView):
 
 
 
+class Logout(APIView):
+    # permission_classes = [IsAuthenticated]
 
+    def get(self,request,format=None):
+        """
+        Remove all auth tokens owned by request.user
+        :param request:
+        :param format:
+        :return:
+        """
+        tokens = Token.objects.filter(user=request.user)
+        for token in tokens:
+            token.delete()
+        content = {'success':_('User logged out')}
+        return Response(content,status=status.HTTP_200_OK)
 
 # class EmployeeLoginView(GenericAPIView):
 #     serializer_class = EmployeeLoginSerializer

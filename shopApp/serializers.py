@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import *
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
-from django.contrib.auth import update_session_auth_hash
 from rest_framework import exceptions
 
 
@@ -37,39 +36,22 @@ class CustomerRegisterSerialiser(serializers.ModelSerializer):
             raise serializers.ValidationError("Password not match.")
         return data
 
-    # def create_user(self, validate_data):
-        # user = User.objects.create_user(
-        #     email=validate_data['email'],
-        #     full_name=validate_data['full_name'],
-        #     address=validate_data['address'],
-        #     phone=validate_data['phone'],
-        #     birthday=validate_data['birthday'],
-        #
-        # )
-        # user.set_password(validate_data['password'])
-        # user.is_customer = True
-        # user.save()
-        # return user
+
     def create(self, validated_data):
         """creates user with encrypted password and retruns the user"""
         return get_user_model().objects.create_user(**validated_data)
 
 
     def update(self, instance, validated_data):
-        instance.email = validated_data.get('email', None)
-        instance.full_name = validated_data.get('full_name', None)
-        instance.address = validated_data.get('address', None)
-        instance.phone = validated_data.get('phone', None)
-        instance.birthday = validated_data.get('birthday', None)
-        instance.save()
+        """Update a user, setting the password correctly and return it"""
+        password = validated_data.pop("password", None)
+        user = super().update(instance, validated_data)
 
-        password = validated_data.get('password', None)
-        confirm_password = validated_data.get('confirm_password', None)
-        if password and confirm_password and password == confirm_password:
-            instance.set_password(password)
-            instance.save()
-        update_session_auth_hash(self.context.get('request'), instance)
-        return instance
+        if password:
+            user.set_password(password)
+            user.save()
+
+        return user
 
     class Meta:
         model = User
@@ -100,36 +82,22 @@ class EmployeeRegisterSerialiser(serializers.ModelSerializer):
             raise serializers.ValidationError("Password not match.")
         return data
 
-    def create_user(self, validate_data):
-        user = User.objects.create(
-            email=validate_data['email'],
-            # password= validate_data['password'],
-            full_name=validate_data['full_name'],
-            address=validate_data['address'],
-            phone=validate_data['phone'],
-            birthday=validate_data['birthday'],
 
-        )
-        user.set_password(validate_data['password'])
-        user.is_employee = True
-        user.save()
-        return user
+    def create(self, validated_data):
+        """creates user with encrypted password and retruns the user"""
+        return get_user_model().objects.create_user(**validated_data)
+
 
     def update(self, instance, validated_data):
-        instance.email = validated_data.get('email', None)
-        instance.full_name = validated_data.get('full_name', None)
-        instance.address = validated_data.get('address', None)
-        instance.phone = validated_data.get('phone', None)
-        instance.birthday = validated_data.get('birthday', None)
-        instance.save()
+        """Update a user, setting the password correctly and return it"""
+        password = validated_data.pop("password", None)
+        user = super().update(instance, validated_data)
 
-        password = validated_data.get('password', None)
-        confirm_password = validated_data.get('confirm_password', None)
-        if password and confirm_password and password == confirm_password:
-            instance.set_password(password)
-            instance.save()
-        update_session_auth_hash(self.context.get('request'), instance)
-        return instance
+        if password:
+            user.set_password(password)
+            user.save()
+
+        return user
 
     class Meta:
         model = User
@@ -156,7 +124,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
         if email and password:
             user = authenticate(email=email,password=password)
-            print("--------------------------------------------",user)
+            # print("--------------------------------------------",user)
             if user:
                 if user.is_active:
                     data["user"] = user
@@ -178,29 +146,6 @@ class LoginSerializer(serializers.ModelSerializer):
 
         )
 
-# class EmployeeLoginSerializer(serializers.Serializer):
-#     email = serializers.CharField(required=True)
-#     password = serializers.CharField(required=True)
-#
-#     def validate(self, data):
-#         email = data.get("email", "")
-#         password = data.get("password", "")
-#
-#         if email and password:
-#             user = authenticate(email=email, password=password)
-#             if user:
-#                 if user.is_active:
-#                     data["user"] = user
-#                 else:
-#                     msg = "User is deactivated."
-#                     raise exceptions.ValidationError(msg)
-#             else:
-#                 msg = "Unable to login with given credentials."
-#                 raise exceptions.ValidationError(msg)
-#         else:
-#             msg = "Must provide username and password both."
-#             raise exceptions.ValidationError(msg)
-#         return data
 
 
 
