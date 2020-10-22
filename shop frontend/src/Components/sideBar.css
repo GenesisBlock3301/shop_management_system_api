@@ -1,0 +1,16 @@
+.sidebar-list {
+    margin-top: 3px;
+    background-color: aquamarine;
+    width: 14%;
+    padding-left: 3px;
+    height: 676px;
+}
+.sidebar-list h2{
+    padding-left: 60px;
+}
+.sidebar-list ul li{
+    list-style-type: none;
+    padding-top: 30px;
+    text-align: center;
+    justify-content: center;
+}
