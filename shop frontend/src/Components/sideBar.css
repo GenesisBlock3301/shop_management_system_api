@@ -2,10 +2,10 @@
     margin-top: 3px;
     background-color: aquamarine;
     width: 14%;
-    padding-left: 3px;
     height: 676px;
+    /*padding-right: 229px;*/
 }
-.sidebar-list h2{
+.sidebar-list h3{
     padding-left: 60px;
 }
 .sidebar-list ul li{
@@ -13,4 +13,8 @@
     padding-top: 30px;
     text-align: center;
     justify-content: center;
+    /*padding-left: 40px;*/
+}
+.body{
+    display: flex;
 }
