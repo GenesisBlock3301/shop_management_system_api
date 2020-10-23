@@ -4,6 +4,7 @@ import {listOfItem} from '../Actions/ActionType'
 const initialState = {
     itemList: [
         {
+            id:1,
             product_name: 'Washing Machine',
             product_type: 'Electrical',
             stock: 4,
@@ -12,7 +13,17 @@ const initialState = {
             image: './washing.jpg'
         },
         {
-            product_name: 'Rice Cooker',
+            id:2,
+            product_name: 'Book',
+            product_type: 'Stationar',
+            stock: 4,
+            price: 50,
+            description: "This is good product",
+            image: './washing.jpg'
+        },
+        {
+            id:3,
+            product_name: 'Keyboard',
             product_type: 'Electrical',
             stock: 4,
             price: 5000,
@@ -20,6 +31,25 @@ const initialState = {
             image: './washing.jpg'
         },
         {
+            id:4,
+            product_name: 'Washing Machine',
+            product_type: 'Electrical',
+            stock: 4,
+            price: 5000,
+            description: "This is good product",
+            image: './washing.jpg'
+        },
+        {
+            id:5,
+            product_name: 'Mobile',
+            product_type: 'Electrical',
+            stock: 4,
+            price: 5000,
+            description: "This is good product",
+            image: './washing.jpg'
+        },
+        {
+            id:6,
             product_name: 'Laptop',
             product_type: 'Electrical',
             stock: 4,
@@ -28,13 +58,15 @@ const initialState = {
             image: './washing.jpg'
         },
         {
-            product_name: 'Bulb',
+            id:7,
+            product_name: 'Fan',
             product_type: 'Electrical',
             stock: 4,
             price: 5000,
             description: "This is good product",
             image: './washing.jpg'
         },
+
     ]
 };
 
