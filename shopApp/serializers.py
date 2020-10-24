@@ -152,19 +152,19 @@ class LoginSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['customer', 'product_name', 'product_type', 'stock', 'price', 'description', 'image']
+        fields = ['id','customer', 'product_name', 'product_type', 'stock', 'price', 'description', 'image']
 
 
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
-        fields = ['product', 'customer', 'rate']
+        fields = ['id','product', 'customer', 'rate']
 
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['user', 'product', 'message']
+        fields = ['id','user', 'product', 'message']
 
 
 class TransactionSerializer(serializers.ModelSerializer):

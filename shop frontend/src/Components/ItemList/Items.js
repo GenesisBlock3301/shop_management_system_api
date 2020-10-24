@@ -10,7 +10,7 @@ const Items = ({items,loading}) => {
                 items.map((item) => {
                     return (
                         <div className="col-sm-3 item" key={item.id}>
-                            <h2>{item.product_name}</h2>
+                            <h2><a href={`/${item.id}`}>{item.product_name}</a></h2>
                             <small>{item.product_type}</small>
                             <p>Stock:{item.stock}</p>
                             <p>Price:{item.price}</p>
