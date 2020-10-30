@@ -147,8 +147,6 @@ class LoginSerializer(serializers.ModelSerializer):
         )
 
 
-
-
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
